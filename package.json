@@ -1,0 +1,8 @@
+{
+  "name": "digiarsip",
+  "version": "1.0.0",
+  "description": "DigiArsip - Sistem Klasifikasi Arsip Kepegawaian berbasis JRA",
+  "engines": {
+    "node": "18.x"
+  }
+}

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DigiArsip — Sistem Klasifikasi Arsip Kepegawaian</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#F5F2EB;--bg2:#EDEAE0;--ink:#1A1916;--ink2:#6B6860;--ink3:#9C9A95;
+  --accent:#2C5F2E;--accent2:#4A8C4D;--accent-bg:#EBF3EB;
+  --red:#8B2E2E;--red-bg:#F5EBEB;
+  --amber:#7A5C1E;--amber-bg:#F5F0E0;
+  --purple:#3D2B6B;--purple-bg:#EEEAF5;
+  --border:#D4D0C8;--card:#FDFCF9;--radius:4px;--radius-lg:8px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--ink);min-height:100vh;font-size:15px;line-height:1.6}
+
+/* HEADER */
+header{background:var(--ink);color:var(--bg);padding:0 2rem;display:flex;align-items:center;justify-content:space-between;height:56px;position:sticky;top:0;z-index:100}
+.logo{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:500;display:flex;align-items:center;gap:10px}
+.logo-dot{width:9px;height:9px;border-radius:50%;background:#4A8C4D}
+.logo-name{letter-spacing:-0.03em}
+.logo-name span{color:#4A8C4D}
+.header-right{font-size:11px;color:rgba(245,242,235,0.45);font-family:'IBM Plex Mono',monospace;text-align:right;line-height:1.7}
+
+/* CONTAINER */
+.container{max-width:1120px;margin:0 auto;padding:2.5rem 2rem}
+
+/* HERO */
+.hero{margin-bottom:2.5rem;display:flex;align-items:flex-end;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+.hero-title{font-family:'Fraunces',serif;font-size:2.3rem;font-weight:300;line-height:1.15;max-width:480px}
+.hero-title em{font-style:italic;color:var(--accent)}
+.hero-meta{font-size:11px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;line-height:1.9}
+
+/* GRID */
+.main-grid{display:grid;grid-template-columns:370px 1fr;gap:1.5rem;align-items:start}
+
+/* PANEL */
+.panel{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden}
+.panel-head{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px}
+.panel-head-title{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:500;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.panel-body{padding:1.25rem}
+
+/* DROPZONE */
+.dropzone{border:1.5px dashed var(--border);border-radius:var(--radius-lg);padding:1.75rem 1.25rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg);position:relative;margin-bottom:.875rem}
+.dropzone:hover,.dropzone.drag{border-color:var(--accent2);background:var(--accent-bg)}
+.dropzone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%}
+.dz-icon{width:38px;height:38px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto .625rem;font-size:17px}
+.dz-title{font-size:13px;font-weight:500;margin-bottom:3px}
+.dz-sub{font-size:11px;color:var(--ink3)}
+
+/* FILE PREVIEW */
+.file-preview{display:none;align-items:center;gap:10px;padding:9px 12px;background:var(--accent-bg);border:1px solid #C5DCC5;border-radius:var(--radius);margin-bottom:.875rem}
+.file-preview.show{display:flex}
+.fp-name{font-size:13px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.fp-size{font-size:11px;color:var(--ink3);font-family:'IBM Plex Mono',monospace}
+.fp-rm{background:none;border:none;cursor:pointer;color:var(--ink3);font-size:15px;padding:2px;line-height:1}
+
+/* FIELDS */
+.field{margin-bottom:.875rem}
+.field label{display:block;font-size:12px;font-weight:500;color:var(--ink2);margin-bottom:4px;letter-spacing:.02em}
+.field input,.field select,.field textarea{width:100%;padding:8px 11px;border:1px solid var(--border);border-radius:var(--radius);background:var(--bg);color:var(--ink);font-family:'DM Sans',sans-serif;font-size:14px;transition:border-color .15s}
+.field input:focus,.field select:focus,.field textarea:focus{outline:none;border-color:var(--accent2)}
+.field textarea{resize:vertical;min-height:60px}
+.field-hint{font-size:11px;color:var(--ink3);margin-top:3px;font-family:'IBM Plex Mono',monospace}
+
+/* BUTTON */
+.btn-main{width:100%;padding:11px;background:var(--ink);color:var(--bg);border:none;border-radius:var(--radius);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:.5rem}
+.btn-main:hover{background:#2A2924}
+.btn-main:disabled{opacity:.45;cursor:not-allowed}
+.spinner{width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;display:none}
+.btn-main.loading .spinner{display:block}
+.btn-main.loading .btn-text{display:none}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* ALERT */
+.alert{padding:9px 13px;border-radius:var(--radius);font-size:13px;margin-bottom:.875rem;display:none}
+.alert.show{display:block}
+.alert-err{background:var(--red-bg);color:var(--red);border:1px solid #E5C5C5}
+.alert-warn{background:var(--amber-bg);color:var(--amber);border:1px solid #E5D8B5}
+
+/* RESULTS */
+.results-panel{display:flex;flex-direction:column;gap:1.25rem}
+
+/* EMPTY */
+.empty-state{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:3rem 2rem;text-align:center}
+.empty-icon{font-size:2.25rem;margin-bottom:.875rem}
+.empty-title{font-family:'Fraunces',serif;font-size:1.2rem;font-weight:300;margin-bottom:.4rem}
+.empty-sub{font-size:13px;color:var(--ink3);max-width:270px;margin:0 auto}
+
+/* RESULT CARD */
+.result-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;animation:fadeUp .35s ease forwards}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.rc-header{padding:.75rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem}
+.rc-filename{font-size:13px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.rc-time{font-size:11px;color:var(--ink3);font-family:'IBM Plex Mono',monospace;white-space:nowrap}
+.rc-body{padding:1.25rem}
+.rc-sub{font-size:12px;color:var(--ink3);margin-bottom:.5rem}
+.rc-kode-row{display:flex;align-items:center;gap:10px;margin-bottom:.75rem;flex-wrap:wrap}
+.rc-kode{font-family:'IBM Plex Mono',monospace;font-size:1.4rem;font-weight:500;letter-spacing:-.02em}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:500}
+.b-permanen{background:var(--accent-bg);color:var(--accent)}
+.b-musnah{background:var(--red-bg);color:var(--red)}
+.b-dinilai{background:var(--purple-bg);color:var(--purple)}
+.rc-conf{font-size:11px;color:var(--ink3);margin-left:auto}
+.rc-jenis{font-size:14px;font-weight:500;margin-bottom:.875rem}
+.rc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:.875rem}
+.rc-stat{background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);padding:9px 11px}
+.rc-stat-lbl{font-size:10px;color:var(--ink3);margin-bottom:2px;font-family:'IBM Plex Mono',monospace}
+.rc-stat-val{font-size:13px;font-weight:500}
+
+/* TIMELINE */
+.rc-tl{display:flex;position:relative;margin-bottom:.875rem}
+.rc-tl::before{content:'';position:absolute;top:10px;left:10px;right:10px;height:2px;background:var(--border);z-index:0}
+.tl-item{flex:1;text-align:center;position:relative;z-index:1}
+.tl-dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--border);background:var(--card);margin:0 auto 5px}
+.tl-dot.on{border-color:var(--accent);background:var(--accent)}
+.tl-dot.ep{border-color:var(--accent);background:var(--accent)}
+.tl-dot.em{border-color:var(--red);background:var(--red)}
+.tl-dot.ed{border-color:var(--purple);background:var(--purple)}
+.tl-lbl{font-size:10px;color:var(--ink3);font-family:'IBM Plex Mono',monospace}
+.tl-val{font-size:11px;font-weight:500;margin-top:1px}
+
+.rc-alasan{background:var(--bg);border-left:3px solid var(--accent2);border-radius:0 var(--radius) var(--radius) 0;padding:9px 13px;font-size:13px;color:var(--ink2);line-height:1.6}
+.rc-divider{border:none;border-top:1px solid var(--border);margin:.875rem 0}
+
+/* LOG */
+.log-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);overflow:hidden;margin-top:2rem}
+.log-head{padding:.875rem 1.25rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.log-actions{display:flex;align-items:center;gap:8px}
+.btn-sm{padding:5px 11px;font-size:12px;background:none;border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;color:var(--ink2);font-family:'DM Sans',sans-serif;transition:all .15s}
+.btn-sm:hover{background:var(--bg);border-color:var(--ink3)}
+.log-count{font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink3)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{text-align:left;padding:7px 12px;background:var(--bg);font-size:10px;font-weight:500;color:var(--ink3);font-family:'IBM Plex Mono',monospace;letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--border);white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid var(--border);color:var(--ink);vertical-align:middle;white-space:nowrap}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:var(--bg)}
+.mono{font-family:'IBM Plex Mono',monospace}
+
+/* STATUS BAR */
+.status-bar{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:6px 12px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--ink2);margin-bottom:.875rem;display:none}
+.status-bar.show{display:block}
+
+@media(max-width:768px){
+  .main-grid{grid-template-columns:1fr}
+  .hero{flex-direction:column;gap:.5rem}
+  .hero-meta{text-align:left}
+  .rc-grid{grid-template-columns:1fr 1fr}
+  .header-right{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    <span class="logo-name">Digi<span>Arsip</span></span>
+  </div>
+  <div class="header-right">
+    Sistem Klasifikasi Arsip Kepegawaian · Permendagri 83/2022<br>
+    Didukung kecerdasan buatan Claude AI · ANRI &amp; Perber BKN 2012
+  </div>
+</header>
+
+<div class="container">
+  <div class="hero">
+    <h1 class="hero-title">Klasifikasi arsip kepegawaian <em>otomatis</em> berbasis JRA</h1>
+    <div class="hero-meta">
+      Permendagri No. 83 Tahun 2022<br>
+      Perber ANRI &amp; BKN No. 08/15 Tahun 2012<br>
+      Kode klasifikasi 800.x.x.x
+    </div>
+  </div>
+
+  <div class="main-grid">
+    <!-- KIRI -->
+    <div>
+      <div class="panel">
+        <div class="panel-head"><span class="panel-head-title">Upload &amp; Analisis Dokumen</span></div>
+        <div class="panel-body">
+          <div class="alert alert-err" id="alertErr"></div>
+          <div class="alert alert-warn" id="alertWarn"></div>
+          <div class="status-bar" id="statusBar">⏳ Sedang menganalisis dokumen...</div>
+
+          <div class="dropzone" id="dz">
+            <input type="file" id="fileInput" accept=".pdf,.jpg,.jpeg,.png,.webp" onchange="handleFile(this.files[0])">
+            <div class="dz-icon">📄</div>
+            <div class="dz-title">Klik atau seret file ke sini</div>
+            <div class="dz-sub">PDF, JPG, PNG, WEBP · Maks 5 MB</div>
+          </div>
+
+          <div class="file-preview" id="fp">
+            <span id="fpIcon" style="font-size:18px;flex-shrink:0">📄</span>
+            <div style="flex:1;min-width:0">
+              <div class="fp-name" id="fpName">—</div>
+              <div class="fp-size" id="fpSize">—</div>
+            </div>
+            <button class="fp-rm" onclick="removeFile()">✕</button>
+          </div>
+
+          <div class="field">
+            <label>NIP Pegawai</label>
+            <input type="text" id="nip" placeholder="19800101 200501 1 001">
+          </div>
+          <div class="field">
+            <label>Nama Pegawai</label>
+            <input type="text" id="nama" placeholder="Nama lengkap">
+          </div>
+          <div class="field">
+            <label>Catatan <span style="font-weight:400;color:var(--ink3)">(opsional)</span></label>
+            <textarea id="catatan" placeholder="Keterangan tambahan jika diperlukan..."></textarea>
+          </div>
+
+          <button class="btn-main" id="btnAnalyze" onclick="analyze()">
+            <div class="spinner"></div>
+            <span class="btn-text">⚡ Analisis Dokumen</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- KANAN -->
+    <div class="results-panel" id="resultsPanel">
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">🗂️</div>
+        <div class="empty-title">Belum ada dokumen</div>
+        <div class="empty-sub">Upload dokumen kepegawaian dan klik Analisis untuk mendapatkan klasifikasi JRA otomatis</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="log-wrap" id="logSection" style="display:none">
+    <div class="log-head">
+      <span class="panel-head-title">Catatan Hasil Klasifikasi</span>
+      <div class="log-actions">
+        <span class="log-count" id="logCount">0 dokumen</span>
+        <button class="btn-sm" onclick="exportCSV()">⬇ Ekspor CSV</button>
+        <button class="btn-sm" onclick="clearLog()">Hapus semua</button>
+      </div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th><th>Nama File</th><th>NIP</th><th>Nama Pegawai</th>
+            <th>Kode JRA</th><th>Jenis Arsip</th><th>Retensi Aktif</th>
+            <th>Retensi Inaktif</th><th>Keterangan</th><th>Thn Dok</th>
+            <th>Jatuh Tempo</th><th>Waktu Analisis</th>
+          </tr>
+        </thead>
+        <tbody id="logBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+let currentFile=null, logData=[];
+
+// drag drop
+const dz=document.getElementById('dz');
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.classList.add('drag')});
+dz.addEventListener('dragleave',()=>dz.classList.remove('drag'));
+dz.addEventListener('drop',e=>{e.preventDefault();dz.classList.remove('drag');if(e.dataTransfer.files[0])handleFile(e.dataTransfer.files[0])});
+
+function handleFile(f){
+  if(!f)return;
+  if(f.size>5*1024*1024){showErr('Ukuran file maksimal 5 MB');return}
+  const ok=['application/pdf','image/jpeg','image/png','image/webp'];
+  if(!ok.includes(f.type)){showErr('Format harus PDF, JPG, PNG, atau WEBP');return}
+  currentFile=f;
+  document.getElementById('fpName').textContent=f.name;
+  document.getElementById('fpSize').textContent=(f.size/1024).toFixed(1)+' KB';
+  document.getElementById('fpIcon').textContent=f.type==='application/pdf'?'📄':'🖼️';
+  document.getElementById('fp').classList.add('show');
+  hideAlert();
+}
+
+function removeFile(){currentFile=null;document.getElementById('fileInput').value='';document.getElementById('fp').classList.remove('show')}
+function showErr(m){const e=document.getElementById('alertErr');e.textContent=m;e.classList.add('show')}
+function showWarn(m){const e=document.getElementById('alertWarn');e.textContent=m;e.classList.add('show')}
+function hideAlert(){document.getElementById('alertErr').classList.remove('show');document.getElementById('alertWarn').classList.remove('show')}
+
+async function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result.split(',')[1]);r.onerror=rej;r.readAsDataURL(f)})}
+
+async function analyze(){
+  hideAlert();
+  const nip=document.getElementById('nip').value.trim();
+  const nama=document.getElementById('nama').value.trim();
+  const catatan=document.getElementById('catatan').value.trim();
+  if(!currentFile){showErr('Pilih dokumen terlebih dahulu');return}
+  if(!nip){showErr('Masukkan NIP pegawai');return}
+  if(!nama){showErr('Masukkan nama pegawai');return}
+
+  const btn=document.getElementById('btnAnalyze');
+  btn.disabled=true;btn.classList.add('loading');
+  document.getElementById('statusBar').classList.add('show');
+
+  try{
+    const b64=await fileToB64(currentFile);
+    const mt=currentFile.type;
+
+    const sys=`Kamu adalah sistem klasifikasi arsip kepegawaian pemerintah daerah Indonesia, ahli JRA berdasarkan Permendagri No. 83 Tahun 2022 dan Peraturan Bersama ANRI & BKN No. 08/15 Tahun 2012.
+
+Tabel JRA Kepegawaian:
+- 800.1.2.4 | SK Pengangkatan CPNS | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.2.5 | SK Pengangkatan PNS | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.2 | SK Kenaikan Pangkat | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.4.1 | Ijazah/Riwayat Pendidikan | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.4.2 | Sertifikat Diklat/Pelatihan | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.5.1 | SKP/DP3/Penilaian Kinerja | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.5.2 | Absensi/Daftar Hadir | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.6.1 | SK Penetapan Gaji | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.6.2 | KGB - Kenaikan Gaji Berkala | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.7.1 | Cuti Tahunan | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.7.2 | Cuti Besar/Cuti Sakit | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.7.3 | Cuti di Luar Tanggungan Negara | Aktif: Selama berlaku | Inaktif: 2 thn setelah aktif | Dinilai kembali
+- 800.1.8.1 | SK Hukuman Disiplin | Aktif: 3 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.9.1 | SK Mutasi/Perpindahan | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.10.1 | SK Pemberhentian/Pensiun | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.11.3 | Cuti Bersalin/Hak Kesehatan | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.12.1 | Sumpah/Janji PNS | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.1 | Formasi Pegawai | Aktif: 3 thn | Inaktif: 2 thn | Musnah
+
+Balas HANYA JSON, tanpa teks lain:
+{"kode":"800.x.x","jenis_arsip":"...","keterangan":"permanen|musnah|dinilai","retensi_aktif":"...","retensi_inaktif":"...","tahun_dokumen":"yyyy atau null","tahun_mulai_inaktif":"yyyy atau null","tahun_jatuh_tempo":"yyyy atau null","alasan":"1-2 kalimat penjelasan","confidence":"tinggi|sedang|rendah"}`;
+
+    const body={
+      model:'claude-sonnet-4-20250514',
+      max_tokens:800,
+      system:sys,
+      messages:[{role:'user',content:[
+        {type:mt==='application/pdf'?'document':'image',source:{type:'base64',media_type:mt,data:b64}},
+        {type:'text',text:`Analisis dokumen ini.\nNIP: ${nip}\nNama: ${nama}${catatan?'\nCatatan: '+catatan:''}\nTentukan kode JRA, retensi, dan estimasi jatuh tempo berdasarkan tahun pada dokumen.`}
+      ]}]
+    };
+
+    const resp=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
+    if(!resp.ok){const e=await resp.json().catch(()=>({}));throw new Error(e.error||'Server error '+resp.status)}
+    const data=await resp.json();
+    const text=data.content.map(c=>c.text||'').join('');
+    const result=JSON.parse(text.replace(/```json|```/g,'').trim());
+    result.filename=currentFile.name;result.nip=nip;result.nama=nama;
+    result.timestamp=new Date().toLocaleString('id-ID');
+    renderResult(result);addToLog(result);
+    document.getElementById('statusBar').classList.remove('show');
+  }catch(err){
+    document.getElementById('statusBar').classList.remove('show');
+    showErr('Gagal menganalisis: '+err.message);
+  }finally{
+    btn.disabled=false;btn.classList.remove('loading');
+  }
+}
+
+function bc(k){return{permanen:'b-permanen',musnah:'b-musnah',dinilai:'b-dinilai'}[k]||'b-permanen'}
+function bl(k){return{permanen:'● Permanen',musnah:'● Musnah',dinilai:'● Dinilai kembali'}[k]||k}
+function dc(k){return{permanen:'ep',musnah:'em',dinilai:'ed'}[k]||''}
+function cl(c){return{tinggi:'✓ Keyakinan tinggi',sedang:'~ Keyakinan sedang',rendah:'? Keyakinan rendah'}[c]||c}
+
+function renderResult(r){
+  const es=document.getElementById('emptyState');
+  if(es)es.remove();
+  const card=document.createElement('div');
+  card.className='result-card';
+  card.innerHTML=`
+<div class="rc-header"><span class="rc-filename">📄 ${r.filename}</span><span class="rc-time">${r.timestamp}</span></div>
+<div class="rc-body">
+  <div class="rc-sub">NIP ${r.nip} · ${r.nama}</div>
+  <div class="rc-kode-row">
+    <span class="rc-kode">${r.kode}</span>
+    <span class="badge ${bc(r.keterangan)}">${bl(r.keterangan)}</span>
+    <span class="rc-conf">${cl(r.confidence)}</span>
+  </div>
+  <div class="rc-jenis">${r.jenis_arsip}</div>
+  <div class="rc-grid">
+    <div class="rc-stat"><div class="rc-stat-lbl">Retensi aktif</div><div class="rc-stat-val">${r.retensi_aktif}</div></div>
+    <div class="rc-stat"><div class="rc-stat-lbl">Retensi inaktif</div><div class="rc-stat-val">${r.retensi_inaktif}</div></div>
+    <div class="rc-stat"><div class="rc-stat-lbl">Tahun dokumen</div><div class="rc-stat-val">${r.tahun_dokumen||'—'}</div></div>
+  </div>
+  <div class="rc-tl">
+    <div class="tl-item"><div class="tl-dot on"></div><div class="tl-lbl">Terbit</div><div class="tl-val">${r.tahun_dokumen||'—'}</div></div>
+    <div class="tl-item"><div class="tl-dot ${r.tahun_mulai_inaktif?'on':''}"></div><div class="tl-lbl">Mulai inaktif</div><div class="tl-val">${r.tahun_mulai_inaktif||'—'}</div></div>
+    <div class="tl-item"><div class="tl-dot ${dc(r.keterangan)}"></div><div class="tl-lbl">${r.keterangan==='permanen'?'Simpan selamanya':'Jatuh tempo'}</div><div class="tl-val">${r.tahun_jatuh_tempo||(r.keterangan==='permanen'?'∞':'—')}</div></div>
+  </div>
+  <hr class="rc-divider">
+  <div class="rc-alasan">${r.alasan}</div>
+</div>`;
+  document.getElementById('resultsPanel').prepend(card);
+}
+
+function addToLog(r){
+  logData.unshift(r);
+  document.getElementById('logSection').style.display='block';
+  document.getElementById('logCount').textContent=logData.length+' dokumen';
+  const row=document.createElement('tr');
+  row.innerHTML=`<td class="mono" style="color:var(--ink3)">${logData.length}</td>
+<td>${r.filename}</td><td class="mono">${r.nip}</td><td>${r.nama}</td>
+<td class="mono" style="font-weight:500">${r.kode}</td><td>${r.jenis_arsip}</td>
+<td>${r.retensi_aktif}</td><td>${r.retensi_inaktif}</td>
+<td><span class="badge ${bc(r.keterangan)}" style="font-size:10px">${bl(r.keterangan)}</span></td>
+<td class="mono">${r.tahun_dokumen||'—'}</td>
+<td class="mono">${r.tahun_jatuh_tempo||(r.keterangan==='permanen'?'∞':'—')}</td>
+<td style="color:var(--ink3)">${r.timestamp}</td>`;
+  document.getElementById('logBody').insertBefore(row,document.getElementById('logBody').firstChild);
+}
+
+function clearLog(){if(!confirm('Hapus semua catatan?'))return;logData=[];document.getElementById('logBody').innerHTML='';document.getElementById('logCount').textContent='0 dokumen'}
+
+function exportCSV(){
+  if(!logData.length)return;
+  const h=['No','Nama File','NIP','Nama Pegawai','Kode JRA','Jenis Arsip','Retensi Aktif','Retensi Inaktif','Keterangan','Tahun Dok','Jatuh Tempo','Waktu Analisis'];
+  const rows=logData.map((r,i)=>[i+1,r.filename,r.nip,r.nama,r.kode,r.jenis_arsip,r.retensi_aktif,r.retensi_inaktif,r.keterangan,r.tahun_dokumen||'',r.tahun_jatuh_tempo||(r.keterangan==='permanen'?'Permanen':''),r.timestamp]);
+  const csv=[h,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
+  a.download='DigiArsip-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
+}
+</script>
+</body>
+</html>
