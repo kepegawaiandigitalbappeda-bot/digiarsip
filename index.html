@@ -204,10 +204,6 @@ tr:hover td{background:var(--bg)}
           </div>
 
           <div class="field">
-            <label>NIP Pegawai</label>
-            <input type="text" id="nip" placeholder="19800101 200501 1 001">
-          </div>
-          <div class="field">
             <label>Nama Pegawai</label>
             <input type="text" id="nama" placeholder="Nama lengkap">
           </div>
@@ -248,7 +244,7 @@ tr:hover td{background:var(--bg)}
       <table>
         <thead>
           <tr>
-            <th>#</th><th>Nama File</th><th>NIP</th><th>Nama Pegawai</th>
+            <th>#</th><th>Nama File</th><th>Nama Pegawai</th>
             <th>Kode JRA</th><th>Jenis Arsip</th><th>Retensi Aktif</th>
             <th>Retensi Inaktif</th><th>Keterangan</th><th>Thn Dok</th>
             <th>Jatuh Tempo</th><th>Waktu Analisis</th>
@@ -291,11 +287,9 @@ async function fileToB64(f){return new Promise((res,rej)=>{const r=new FileReade
 
 async function analyze(){
   hideAlert();
-  const nip=document.getElementById('nip').value.trim();
   const nama=document.getElementById('nama').value.trim();
   const catatan=document.getElementById('catatan').value.trim();
   if(!currentFile){showErr('Pilih dokumen terlebih dahulu');return}
-  if(!nip){showErr('Masukkan NIP pegawai');return}
   if(!nama){showErr('Masukkan nama pegawai');return}
 
   const btn=document.getElementById('btnAnalyze');
@@ -424,7 +418,7 @@ Balas HANYA JSON, tanpa teks lain:
       system:sys,
       messages:[{role:'user',content:[
         {type:mt==='application/pdf'?'document':'image',source:{type:'base64',media_type:mt,data:b64}},
-        {type:'text',text:`Analisis dokumen ini.\nNIP: ${nip}\nNama: ${nama}${catatan?'\nCatatan: '+catatan:''}\nTentukan kode JRA, retensi, dan estimasi jatuh tempo berdasarkan tahun pada dokumen.`}
+        {type:'text',text:`Analisis dokumen ini.\nNama: ${nama}${catatan?'\nCatatan: '+catatan:''}\nTentukan kode JRA, retensi, dan estimasi jatuh tempo berdasarkan tahun pada dokumen.`}
       ]}]
     };
 
@@ -433,7 +427,7 @@ Balas HANYA JSON, tanpa teks lain:
     const data=await resp.json();
     const text=data.content.map(c=>c.text||'').join('');
     const result=JSON.parse(text.replace(/```json|```/g,'').trim());
-    result.filename=currentFile.name;result.nip=nip;result.nama=nama;
+    result.filename=currentFile.name;result.nama=nama;
     result.timestamp=new Date().toLocaleString('id-ID');
     renderResult(result);addToLog(result);
     document.getElementById('statusBar').classList.remove('show');
@@ -458,7 +452,7 @@ function renderResult(r){
   card.innerHTML=`
 <div class="rc-header"><span class="rc-filename">📄 ${r.filename}</span><span class="rc-time">${r.timestamp}</span></div>
 <div class="rc-body">
-  <div class="rc-sub">NIP ${r.nip} · ${r.nama}</div>
+  <div class="rc-sub">${r.nama}</div>
   <div class="rc-kode-row">
     <span class="rc-kode">${r.kode}</span>
     <span class="badge ${bc(r.keterangan)}">${bl(r.keterangan)}</span>
@@ -487,7 +481,7 @@ function addToLog(r){
   document.getElementById('logCount').textContent=logData.length+' dokumen';
   const row=document.createElement('tr');
   row.innerHTML=`<td class="mono" style="color:var(--ink3)">${logData.length}</td>
-<td>${r.filename}</td><td class="mono">${r.nip}</td><td>${r.nama}</td>
+<td>${r.filename}</td><td>${r.nama}</td>
 <td class="mono" style="font-weight:500">${r.kode}</td><td>${r.jenis_arsip}</td>
 <td>${r.retensi_aktif}</td><td>${r.retensi_inaktif}</td>
 <td><span class="badge ${bc(r.keterangan)}" style="font-size:10px">${bl(r.keterangan)}</span></td>
@@ -501,8 +495,8 @@ function clearLog(){if(!confirm('Hapus semua catatan?'))return;logData=[];docume
 
 function exportCSV(){
   if(!logData.length)return;
-  const h=['No','Nama File','NIP','Nama Pegawai','Kode JRA','Jenis Arsip','Retensi Aktif','Retensi Inaktif','Keterangan','Tahun Dok','Jatuh Tempo','Waktu Analisis'];
-  const rows=logData.map((r,i)=>[i+1,r.filename,r.nip,r.nama,r.kode,r.jenis_arsip,r.retensi_aktif,r.retensi_inaktif,r.keterangan,r.tahun_dokumen||'',r.tahun_jatuh_tempo||(r.keterangan==='permanen'?'Permanen':''),r.timestamp]);
+  const h=['No','Nama File','Nama Pegawai','Kode JRA','Jenis Arsip','Retensi Aktif','Retensi Inaktif','Keterangan','Tahun Dok','Jatuh Tempo','Waktu Analisis'];
+  const rows=logData.map((r,i)=>[i+1,r.filename,r.nama,r.kode,r.jenis_arsip,r.retensi_aktif,r.retensi_inaktif,r.keterangan,r.tahun_dokumen||'',r.tahun_jatuh_tempo||(r.keterangan==='permanen'?'Permanen':''),r.timestamp]);
   const csv=[h,...rows].map(r=>r.map(v=>'"'+String(v).replace(/"/g,'""')+'"').join(',')).join('\n');
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'}));
   a.download='DigiArsip-'+new Date().toISOString().slice(0,10)+'.csv';a.click();
