@@ -300,120 +300,137 @@ async function analyze(){
     const b64=await fileToB64(currentFile);
     const mt=currentFile.type;
 
-    const sys=`Kamu adalah sistem klasifikasi arsip kepegawaian pemerintah daerah Indonesia, ahli JRA berdasarkan Permendagri No. 83 Tahun 2022 dan Peraturan Bersama ANRI & BKN No. 08/15 Tahun 2012.
+    const sys=`Kamu adalah sistem klasifikasi arsip kepegawaian pemerintah daerah Indonesia, ahli JRA berdasarkan Permendagri No. 83 Tahun 2022 tentang Kode Klasifikasi Arsip di Lingkungan Kementerian Dalam Negeri dan Pemerintah Daerah, serta Peraturan Bersama ANRI & BKN No. 08/15 Tahun 2012.
 
-Tabel JRA Kepegawaian PEMDA (lengkap):
-- 800.1.1.1 | Perencanaan Kebutuhan Aparatur Sipil Negara, antara lain: Bahan penyusunan rencana kebutuhan, Analisis Kebutuhan, Pengolahan Data Kebutuhan | Aktif: 2 Tahun  sejak data diperbarui (update) | Inaktif: 3 Tahun | Musnah
-- 800.1.1.2 | Perencanaan Pertimbangan Formasi, antara lain: Pertimbangan teknis penetapan formasi ASN, Pertimbangan teknis penetapan formasi ikatan dinas | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.1.3 | Penetapan Kebutuhan Aparatur Sipil Negara | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.1.4 | Standarisasi Jabatan, antara lain: Informasi Jabatan, Kompetensi Jabatan, Klasifikasi Jabatan | Aktif: 2 Tahun sejak standar baru ditetapkan | Inaktif: 3 Tahun | Permanen
-- 800.1.2.1 | Formasi ASN, antara lain: Usulan formasi, Usulan permintaan formasi kepada Menpan RB dan Kepala BKN , Persetujuan Formasi, Penetapan Formasi, Penetapan Formasi Khusus | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.2.2 | Proses Rekrutmen/Pengadaan ASN, antara lain: Proses Rekrutmen ASN, Penetapan Pengumuman Kelulusan ASN | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.2.3 | Pengumuman Kelulusan ASN | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.1.2.4 | Berkas Lamaran Yang Tidak Diterima | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.1.2.5 | Pengangkatan ASN | Aktif: 1 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 1 Tahun | Musnah
-- 800.1.2.6 | Open Biding (Seleksi Terbuka Jabatan) | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.2.7 | Pengelolaan Sistem Rekrutmen ASN | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.2.8 | Fasilitasi Penyelenggaraan Seleksi ASN | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.1.3.1 | Usulan Alih Status, Pindah Instansi, Pindah Wilayah Kerja, Diperbantukan, Dipekerjakan, Penugasan Sementara, Mutasi antar Perwakilan, Mutasi ke dan dari Perwakilan, Pemindahan Sementara, Persetujuan/Pertimbangan Kepala BKN | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.3.2 | Kenaikan Pangkat/Golongan/Jabatan | Aktif: 1 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 1 Tahun | Musnah
-- 800.1.3.3 | Pengangkatan dan Pemberhentian Jabatan Struktural/Fungsional | Aktif: 1 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 1 Tahun | Musnah
-- 800.1.3.4 | Perubahan Data Dasar/ Status/Kedudukan Hukum Pegawai | Aktif: 1 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 1 Tahun | Musnah
-- 800.1.3.5 | Peninjauan Masa Kerja | Aktif: 1 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 1 Tahun | Musnah
-- 800.1.3.6 | Badan Pertimbangan Jabatan dan Pangkat (BAPERJAKAT) | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.4.1 | Usulan Tugas Belajar/ Ijin Belajar/ Diklat/ Kursus/ Magang/ Ujian Dinas/ Praktek Kerja di Instansi lain/ Pertukaran antar ASN dengan pegawai swasta | Aktif: 1 Tahun sejak selesainya pertanggungjawaban suatu penugasan | Inaktif: 1 Tahun | Musnah
-- 800.1.4.2 | Penyesuaian ijazah | Aktif: 1 Tahun  sejak data diperbarui (update) | Inaktif: 1 Tahun | Musnah
-- 800.1.4.3 | Penyusunan Sistem Karier | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.4.4 | Standar Kinerja Pegawai (SKP) dan Penilaian Prestasi Kerja | Aktif: 1 Tahun  sejak berakhirnya masa tahun anggaran | Inaktif: 1 Tahun | Musnah
-- 800.1.4.5 | Angka Kredit, antara lain: Pengajuan Daftar Usul Pengajuan Angka Kredit, Penilaian Daftar Usul Pengajuan Angka Kredit | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.1.5.1 | Hasil Penilaian Kinerja dan Standar Kerja | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.5.2 | Pengelolaan Database dan Analisis Sistem Informasi Kinerja | Aktif: 2 Tahun setelah sistem atau data diperbarui | Inaktif: 3 Tahun | Permanen
-- 800.1.5.3 | Evaluasi dan Pemantauan Penilaian Kinerja dan Standar Kinerja | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.6.1 | Kode Etik Pegawai | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Permanen
-- 800.1.6.2 | Disiplin | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.6.3 | Pemberhentian Dengan Hormat | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.6.4 | Pemberhentian Dengan Tidak Hormat | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.6.5 | Pemberhentian Sementara | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.6.6 | Pensiun ASN, antara lain: Administrasi Pensiun ASN, Penetapan Pensiun ASN, Penetapan Pertimbangan Teknis Pensiun ASN, Pensiun Pejabat Negara dan Jada/Dudanya | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.8.1 | Status Kepegawaian | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.8.2 | Kedudukan Kepegawaian | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.8.3 | Keberatan Pegawai | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.8.4 | Perselisihan/Sengketa Kepegawaian | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.1.9.1 | Pengolahan Data dan Informasi Kepegawaian | Aktif: 2 Tahun setelah sistem atau data diperbarui | Inaktif: 3 Tahun | Musnah
-- 800.1.9.2 | Pengembangan Sistem Informasi Kepegawaian | Aktif: 2 Tahun setelah sistem atau data diperbarui | Inaktif: 3 Tahun | Musnah
-- 800.1.9.3 | Pengembangan Sistem Pengelolaan Arsip Kepegawaian Elektonik | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Permanen
-- 800.1.9.4 | Sistem Pengelolaan Arsip Kepegawaian Fisik | Aktif: 1 Tahun  sejak dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.10.1 | Formasi, Pengadaan dan Pasca Diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.10.2 | Kepangkatan, Pengangkatan, dan Pemberhentian Dalam Jabatan | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.10.3 | Gaji dan Tunjangan, Kesejahteraan dan Kinerja | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.10.4 | Kode Etik, Disiplin, Pemberhentian dan Pensiun ASN | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.10.5 | Laporan Hasil Pengawasan dan Pengendalian | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.10.6 | Sanggahan terhadap Permasalahan Tenaga Honorer | Aktif: 2 Tahun  sejak penetapan keputusan yang terbaru atau sejak keputusan lama dinyatakan tidak berlaku | Inaktif: 3 Tahun | Musnah
-- 800.1.11.1 | Surat Perintah Dinas/Surat Tugas | Aktif: 1 Tahun sejak selesainya pertanggungjawaban suatu penugasan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.2 | Cuti Sakit | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.3 | Cuti Bersalin | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.4 | Cuti Tahunan | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.5 | Cuti Alasan Penting | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.6 | Cuti Besar | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.7 | Cuti Di luar Tanggungan Negara | Aktif: 1 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.11.8 | Karpeg/KPE/Karis/Karsu | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Musnah
-- 800.1.11.9 | Keanggotaan Organisasi Profesi/ Kedinasan | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Musnah
-- 800.1.11.10 | Laporan Pajak Penghasilan Pribadi (LP2P) | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Musnah
-- 800.1.11.11 | Keterangan Penerimaan Pembayaran Penghasilan Pegawai (KP4) | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Musnah
-- 800.1.11.12 | Daftar Urut Kepangkatan (DUK) | Aktif: 1 Tahun setelah sistem atau data diperbarui | Inaktif: 1 Tahun | Musnah
-- 800.1.11.13 | Pengurusan Kenaikan Gaji Berkala, Mutasi Gaji/ tunjangan | Aktif: 1 Tahun   sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 1 Tahun | Musnah
-- 800.1.12.1 | Pemeliharaan Kesehatan Pegawai | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.2 | Asuransi Pegawai/BPJS | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.3 | Tabungan Perumahan | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.4 | Bantuan Sosial | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.5 | Pakaian Dinas | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.6 | Layanan Pegawai yang Meninggal Karena Dinas | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.7 | Pemberian Tali Kasih | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.8 | Pemberian Piagam Penghargaan dan Tanda Jasa | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.9 | Olahraga dan Rekreasi | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.12.10 | Rekam Medis | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Musnah
-- 800.1.13.1 | Pegawai Negeri Sipil (PNS) | Aktif: 3 Tahun  setelah penetapan pensiun | Inaktif: 7 Tahun | Musnah
-- 800.1.13.2 | Pegawai Pemerintah dengan Perjanjian Kerja (PPPK) | Aktif: 3 Tahun  setelah penetapan pensiun | Inaktif: 7 Tahun | Musnah
-- 800.1.13.3 | Pejabat Negara dan pejabat lainnya yang disetarakan | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Permanen
-- 800.1.13.4 | Sekretaris Daerah | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Permanen
-- 800.1.13.5 | ASN berjasa/terlibat dalam peristiwa berskala nasional | Aktif: 1 Tahun  sejak hak dan kewajiban habis | Inaktif: 1 Tahun | Permanen
-- 800.1.14.1 | Penilaian Kompetensi | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.1.14.2 | Hasil Penilaian Kompetensi | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.2.2.1 | Sistem Informasi program dan pembinaan diklat | Aktif: 2 Tahun  setelah sistem aplikasi ditingkatkan dan dikembangkan | Inaktif: 3 Tahun | Permanen
-- 800.2.2.2 | Pedoman-pedoman kediklatan | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
-- 800.2.2.3 | Kurikulum-kurikulum diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.2.4 | Modul-modul diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.2.5 | Panduan fasilitator | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.2.6 | Saran/rekomendasi penyelenggaraan diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
-- 800.2.2.7 | Notulen sosialisasi/Rapat Koordinasi Kebijakan Diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.2.8 | Monitoring dan evaluasi program dan pembinaan diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
-- 800.2.2.9 | Konsultasi, advokasi, asistensi diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
-- 800.2.3.1 | Seleksi dan pengembangan  Widyaiswara | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.3.2 | Sertifikasi  Widyaiswara | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Musnah
-- 800.2.3.3 | Monitoring dan evaluasi Widyaiswara | Aktif: 2 Tahun  sejak proses kegiatan dinyatakan selesai dilaksanakan | Inaktif: 3 Tahun | Permanen
-- 800.2.3.4 | Penilaian  Widyaiswara | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.3.5 | Konsultasi, advokasi dan asistensi  Widyaiswara | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.3.6 | Sistem Informasi Pembinaan Widyaiswara | Aktif: 2 Tahun  setelah sistem aplikasi ditingkatkan dan dikembangkan | Inaktif: 3 Tahun | Permanen
-- 800.2.4.1 | Perencanaan; peserta, pengajar, penjadwalan Penyelenggaraan Diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.4.2 | Penyelenggaraan Penyelenggaraan Diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.4.3 | Konsultasi, advokasi, asistensi penyelenggaraan diklat | Aktif: 1 Tahun | Inaktif: 1 Tahun | Musnah
-- 800.2.4.4 | Pengembangan bahan ajar dan metodologi pembelajaran | Aktif: 2 Tahun | Inaktif: 3 Tahun | Musnah
-- 800.2.4.5 | Sistem informasi diklat | Aktif: 2 Tahun  setelah sistem aplikasi ditingkatkan dan dikembangkan | Inaktif: 3 Tahun | Permanen
-- 800.2.4.6 | Monitoring Penyelenggara Diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
-- 800.2.4.7 | Monitoring dan evaluasi Pasca diklat | Aktif: 2 Tahun | Inaktif: 3 Tahun | Permanen
+TABEL JRA KEPEGAWAIAN SESUAI PERMENDAGRI 83/2022:
 
-Instruksi:
-1. Identifikasi jenis dokumen dari gambar/PDF yang diunggah
-2. Cocokkan dengan kode JRA yang paling sesuai dari tabel di atas
-3. Gunakan kode yang paling spesifik (tersier/sekunder)
-4. Untuk nasib akhir: gunakan "permanen", "musnah", atau "dinilai"
-5. Hitung tahun_jatuh_tempo = tahun_dokumen + retensi aktif + retensi inaktif (jika musnah/dinilai)
+=== 800.1.1 PENYUSUNAN & PENETAPAN KEBUTUHAN ASN ===
+- 800.1.1.1 | Perencanaan Kebutuhan ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.1.2 | Pertimbangan Formasi ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.1.3 | Penetapan Kebutuhan ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.1.4 | Standarisasi Jabatan | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.1.2 FORMASI DAN PENGADAAN PEGAWAI ===
+- 800.1.2.1 | Formasi ASN (usulan & penetapan formasi) | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.2.2 | Proses Rekrutmen/Pengadaan ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.2.3 | Pengumuman Kelulusan ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.2.4 | Berkas Lamaran Yang Tidak Diterima | Aktif: 1 thn | Inaktif: — | Musnah
+- 800.1.2.5 | Pengangkatan ASN / SK CPNS / SK PNS | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.2.6 | Open Bidding / Seleksi Terbuka Jabatan | Aktif: 3 thn | Inaktif: 2 thn | Musnah
+- 800.1.2.7 | Pengelolaan Sistem Rekrutmen ASN | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.2.8 | Fasilitasi Penyelenggaraan Seleksi ASN | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+
+=== 800.1.3 MUTASI PEGAWAI ===
+- 800.1.3.1 | Usulan Mutasi (pindah instansi, pindah wilayah, diperbantukan, dipekerjakan) | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.2 | SK Kenaikan Pangkat/Golongan/Jabatan | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.3 | SK Pengangkatan dan Pemberhentian Jabatan Struktural/Fungsional | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.4 | Perubahan Data Dasar/Status/Kedudukan Hukum Pegawai | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.5 | Peninjauan Masa Kerja | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.3.6 | BAPERJAKAT | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.1.4 PENGEMBANGAN KARIR ===
+- 800.1.4.1 | Tugas Belajar/Izin Belajar/Diklat/Kursus/Magang/Sertifikat Pelatihan | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.4.2 | Penyesuaian Ijazah | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.4.3 | Penyusunan Sistem Karier | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.4.4 | SKP dan Penilaian Prestasi Kerja / DP3 | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.4.5 | Angka Kredit Jabatan Fungsional (DUPAK) | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.1.5 KINERJA ASN ===
+- 800.1.5.1 | Hasil Penilaian Kinerja dan Standar Kinerja (SKP, DP3, e-kinerja) | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.5.2 | Pengelolaan Database Sistem Informasi Kinerja | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.5.3 | Evaluasi dan Pemantauan Penilaian Kinerja | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+
+=== 800.1.6 KODE ETIK, DISIPLIN, PEMBERHENTIAN DAN PENSIUN ASN ===
+- 800.1.6.1 | Kode Etik Pegawai | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.6.2 | Disiplin / Hukuman Disiplin PNS | Aktif: 3 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.6.3 | SK Pemberhentian Dengan Hormat | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.6.4 | SK Pemberhentian Dengan Tidak Hormat | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.6.5 | Pemberhentian Sementara | Aktif: Selama aktif | Inaktif: 2 thn | Dinilai kembali
+- 800.1.6.6 | Pensiun ASN (SK pensiun, administrasi pensiun, pertimbangan teknis) | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+
+=== 800.1.7 BANTUAN HUKUM ===
+- 800.1.7 | Bantuan Hukum bagi ASN | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.1.8 STATUS DAN KEDUDUKAN PEGAWAI ===
+- 800.1.8.1 | Status Kepegawaian | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.8.2 | Kedudukan Kepegawaian | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.8.3 | Keberatan Pegawai | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.8.4 | Perselisihan/Sengketa Kepegawaian | Aktif: 5 thn | Inaktif: 10 thn | Dinilai kembali
+
+=== 800.1.9 SISTEM INFORMASI KEPEGAWAIAN ===
+- 800.1.9.1 | Pengolahan Data dan Informasi Kepegawaian | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.9.2 | Pengembangan Sistem Informasi Kepegawaian | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.9.3 | Pengembangan Sistem Pengelolaan Arsip Kepegawaian Elektronik | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.9.4 | Sistem Pengelolaan Arsip Kepegawaian Fisik | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.1.10 PENGAWASAN DAN PENGENDALIAN ===
+- 800.1.10.1 | Pengawasan Formasi, Pengadaan dan Pasca Diklat | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.10.2 | Pengawasan Kepangkatan, Pengangkatan, Pemberhentian dalam Jabatan | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.10.3 | Pengawasan Gaji, Tunjangan, Kesejahteraan dan Kinerja | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.10.4 | Pengawasan Kode Etik, Disiplin, Pemberhentian dan Pensiun ASN | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.10.5 | Laporan Hasil Pengawasan dan Pengendalian | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.10.6 | Sanggahan terhadap Permasalahan Tenaga Honorer | Aktif: 3 thn | Inaktif: 5 thn | Musnah
+
+=== 800.1.11 ADMINISTRASI PEGAWAI ===
+- 800.1.11.1 | Surat Perintah Dinas / Surat Tugas | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.2 | Cuti Sakit | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.3 | Cuti Bersalin | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.4 | Cuti Tahunan | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.5 | Cuti Alasan Penting | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.6 | Cuti Besar | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.7 | Cuti Di Luar Tanggungan Negara (CLTN) | Aktif: Selama berlaku | Inaktif: 2 thn setelah aktif kembali | Dinilai kembali
+- 800.1.11.8 | Karpeg/KPE/Karis/Karsu | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.11.9 | Keanggotaan Organisasi Profesi/Kedinasan | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.10 | Laporan Pajak Penghasilan Pribadi (LP2P) | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.11.11 | Keterangan Penerimaan Pembayaran Penghasilan Pegawai (KP4) | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.11.12 | Daftar Urut Kepangkatan (DUK) | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.11.13 | Kenaikan Gaji Berkala (KGB) / Mutasi Gaji / Tunjangan | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+
+=== 800.1.12 KESEJAHTERAAN PEGAWAI ===
+- 800.1.12.1 | Pemeliharaan Kesehatan Pegawai / Rekam Medis | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.1.12.2 | Asuransi Pegawai / BPJS Ketenagakerjaan / BPJS Kesehatan / Taspen | Aktif: Selama aktif | Inaktif: 5 thn setelah pensiun | Musnah
+- 800.1.12.3 | Tabungan Perumahan (TAPERUM) | Aktif: Selama aktif | Inaktif: 5 thn setelah pensiun | Musnah
+- 800.1.12.4 | Bantuan Sosial Pegawai | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.12.5 | Pakaian Dinas | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+- 800.1.12.6 | Layanan Pegawai Meninggal Karena Dinas | Aktif: Selama aktif | Inaktif: 2 thn | Permanen
+- 800.1.12.7 | Piagam Penghargaan / Tanda Jasa / Satyalancana | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.12.8 | Olahraga dan Rekreasi Pegawai | Aktif: 2 thn | Inaktif: 3 thn | Musnah
+
+=== 800.1.13 ADMINISTRASI PERSEORANGAN ===
+- 800.1.13.1 | Berkas Perseorangan PNS (personal file kepegawaian individu) | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+- 800.1.13.2 | Berkas Perseorangan PPPK | Aktif: Selama kontrak | Inaktif: 2 thn setelah kontrak berakhir | Permanen
+- 800.1.13.3 | Berkas Pejabat Negara / Pejabat yang disetarakan | Aktif: Selama menjabat | Inaktif: 2 thn setelah tidak menjabat | Permanen
+- 800.1.13.4 | Berkas Sekretaris Daerah | Aktif: Selama menjabat | Inaktif: 2 thn setelah tidak menjabat | Permanen
+- 800.1.13.5 | ASN berjasa/terlibat peristiwa berskala nasional | Aktif: Selama aktif | Inaktif: 2 thn setelah pensiun | Permanen
+
+=== 800.1.14 PENILAIAN KOMPETENSI ===
+- 800.1.14.1 | Penilaian Kompetensi (assessment center) | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.1.14.2 | Hasil Penilaian Kompetensi | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+
+=== 800.2 PENDIDIKAN DAN PELATIHAN ===
+- 800.2.2 | Diklat/Pelatihan ASN (kurikulum, modul, penyelenggaraan) | Aktif: 5 thn | Inaktif: 5 thn | Dinilai kembali
+- 800.2.4 | Penyelenggaraan Diklat | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+- 800.2.5 | Alumni Diklat | Aktif: 5 thn | Inaktif: 5 thn | Musnah
+
+ATURAN PENCOCOKAN UTAMA:
+- SK CPNS/PNS → 800.1.2.5 (Permanen)
+- SK Kenaikan Pangkat → 800.1.3.2 (Permanen)
+- SK Jabatan Struktural/Fungsional → 800.1.3.3 (Permanen)
+- SKP/DP3/Penilaian Kinerja → 800.1.5.1 (Musnah 5+5 thn)
+- Cuti Sakit → 800.1.11.2 | Cuti Bersalin → 800.1.11.3 | Cuti Tahunan → 800.1.11.4 | Cuti Alasan Penting → 800.1.11.5 | Cuti Besar → 800.1.11.6 (semua Musnah 2+3 thn)
+- CLTN → 800.1.11.7 (Dinilai kembali)
+- KGB/Kenaikan Gaji Berkala → 800.1.11.13 (Musnah 2+3 thn)
+- Disiplin/Hukuman Disiplin → 800.1.6.2 (Dinilai kembali 3+5 thn)
+- SK Pensiun → 800.1.6.6 (Permanen)
+- Berkas personal file/perseorangan → 800.1.13.1 (Permanen)
+- Sertifikat diklat/pelatihan/kursus → 800.1.4.1 (Permanen)
+- Angka kredit/DUPAK → 800.1.4.5 (Dinilai kembali)
 
 Balas HANYA JSON, tanpa teks lain:
-{"kode":"800.x.x.x","jenis_arsip":"...","keterangan":"permanen|musnah|dinilai","retensi_aktif":"...","retensi_inaktif":"...","tahun_dokumen":"yyyy atau null","tahun_mulai_inaktif":"yyyy atau null","tahun_jatuh_tempo":"yyyy atau null","alasan":"1-2 kalimat penjelasan","confidence":"tinggi|sedang|rendah"}`;
+{"kode":"800.x.x.x","jenis_arsip":"...","keterangan":"permanen|musnah|dinilai","retensi_aktif":"...","retensi_inaktif":"...","tahun_dokumen":"yyyy atau null","tahun_mulai_inaktif":"yyyy atau null","tahun_jatuh_tempo":"yyyy atau null","alasan":"1-2 kalimat penjelasan mengacu pasal Permendagri 83/2022","confidence":"tinggi|sedang|rendah"}`;
 
     const body={
-      model:'claude-sonnet-4-20250514',
+      model:'claude-sonnet-4-6',
       max_tokens:800,
       system:sys,
       messages:[{role:'user',content:[
